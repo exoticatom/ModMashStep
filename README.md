@@ -5,7 +5,7 @@ For implementation it is needed to have relay board (1 relay reserved) and high 
 Plugin is only lightly modified base plugin for steps
 
 Idea is to introduce "Protective Circuit" which will, when triggered:
-- stop brewing process, after which manual intervention to continue the brewing is needed.
+- stop brewing process, after which manual intervention to continue the brewing is needed (reset current step)
 - show remaining time when process was stopped.
 - by activating protective circuit disconnect output of the heater SSR in order to protect the mash from higher temperature.
 
