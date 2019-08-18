@@ -20,4 +20,3 @@ Additional info:
 Temperature threshold is the temperature when protection will kick in and disconnect SSR output.
 Threshold temperature = Temperature (for mashing) + temperature difference
 
-
