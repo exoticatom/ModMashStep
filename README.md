@@ -1,25 +1,22 @@
-# ModMeshStep
-This plugin is made for CraftBeerPi3 to extend capabilites in regards to common problem with SSR when they fail shortened.
-It adds new step called "Mod_MeshStep" to steps.
-
-Idea is to introduce "Protective Circuit" which will, when triggered:
-- stop brewing process
-- show remaining time
-- disconnect output of SSR in order to protect the mash from higher temperature.
-
-Configuration of  plugin is to adding protective circuit which can be one of the oputputs of the relay board.
-Relay board (Protective Actor) is controlling high current (16+ A) breaker.
-Breaker is in series to SSR output and in case of trouble will disconnect the heater.
-
-If the portectection is active, manual intervention is needed.
-
-Config:
-- "Temperature threshold" is the  temperature when protection will kick in and disconnect SSR output.
+# ModMeshStep Plug-in
+This plugin is made for CraftBeerPi3 to extend protective capabilities in regards to a problem which could occur with SSR when they fail (shortened).
+This plugin adds new step called "Mod_MeshStep" to steps, with extended capabilites.
 For implementation it is needed to have relay board (1 relay reserved) and high current circuit breaker.
 
-- Protective Circuit is an Actor which controls output of SSR.
+Idea is to introduce "Protective Circuit" which will, when triggered:
+- stop brewing process, after which manual intervention to continue the brewing is needed.
+- show remaining time when process was stopped.
+- by activating protective circuit disconnect output of the heater SSR in order to protect the mash from higher temperature.
 
-info: Threshold temperature = Temperature + temperature difference
+In this version protection is relaying on the same sensor data as for the kettle which is being protected.
 
+How to Config:
+- Add an Actor which will act as protective circuit. Typically one output of relay board.
+- Add the Mod_MeshStep to your brewing and configure Protective circuit + temperature difference.
+- Connect high power breaker to your relay output and it's outputs in series to SSR relay.
+
+
+Temperature threshold is the temperature when protection will kick in and disconnect SSR output.
+Threshold temperature = Temperature (for mashing) + temperature difference
 
 
