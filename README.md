@@ -2,6 +2,7 @@
 This plugin is made for CraftBeerPi3 to extend protective capabilities in regards to a problem which could occur with SSR when they fail (shortened).
 This plugin adds new step called "Mod_MeshStep" to steps, with extended capabilites.
 For implementation it is needed to have relay board (1 relay reserved) and high current circuit breaker.
+Plugin is only lightly modified base plugin for steps
 
 Idea is to introduce "Protective Circuit" which will, when triggered:
 - stop brewing process, after which manual intervention to continue the brewing is needed.
