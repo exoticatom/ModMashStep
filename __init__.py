@@ -17,11 +17,13 @@ class Mod_MashStep(StepBase):
     temp = Property.Number("Temperature", configurable=True, description="Target Temperature of Mash Step")
     kettle = StepProperty.Kettle("Kettle", description="Kettle in which the mashing takes place")
     timer = Property.Number("Timer in Minutes", configurable=True, description="Timer is started when the target temperature is reached")
-    # Modified, added properties to enable temperature  protection function.
-    #Temperature protection offset temperature on which will protecton kick in.
+
+    # Temp Protection modification start
     protection_temp_diff = Property.Number("Temperature Difference", configurable=True, description="Treshold Temperature = Temperature + Temperature Difference. Timer will stop if this temperature si reached and brewing procces will be interrupted",default_value=8)
     protection_actor = StepProperty.Actor("Portective Circuit Actor",  description="Please select an Actor which will be activated if treshold temperature is reached")
     s = False
+    # Temp Protection modification  end
+
     def init(self):
         '''
         Initialize Step. This method is called once at the beginning of the step
@@ -46,16 +48,20 @@ class Mod_MashStep(StepBase):
     def reset(self):
         self.stop_timer()
         self.set_target_temp(self.temp, self.kettle)
-        self.set_target_temp(self.temp, self.kettle)
+
+        # Temp Protection modification start
         #de-activate temperature protection
         self.actor_off(self.protection_actor)
         s = False
+        # Temp Protection modification end
 
     def finish(self):
         self.set_target_temp(0, self.kettle)
+        # Temp Protection modification start
         #de-activate temperature protection
         self.actor_off(self.protection_actor)
         s = False
+        # Temp Protection modification end
 
     def execute(self):
         '''
@@ -69,18 +75,17 @@ class Mod_MashStep(StepBase):
             if self.is_timer_finished() is None:
                 self.start_timer(int(self.timer) * 60)
 
-        #Temp protection start
+        #Temp protection start modification and overshoot deteection. If temperature is over N Celsius, protection will stop the process
         if (int(self.get_kettle_temp(self.kettle)) >= (int(self.temp) + int(self.protection_temp_diff))) and self.s is False:
             self.s = True
-            self.notify("ALARM", "Exiting brewing proces critical temperature reached", timeout=0, type="danger")
+            self.notify("ALARM", "Exiting brewing process - critical temperature is reached", timeout=0, type="danger")
             #Activate temperature protection
             self.actor_on(self.protection_actor)
-            #Dont go to the next step "Alarm" and stop alaram
-            self.notify( str(time.strftime('%H:%M:%S', time.gmtime(int((self.timer_remaining()))))),"time until the end", timeout=0)
+            #Dont go to the next step, show "Alarm" and remaining time
+            self.notify( str(time.strftime('%H:%M:%S', time.gmtime(int((self.timer_remaining()))))),"time until the end of this step", timeout=0)
+            #Reset and stop timer
             self.timer_end = True
-            if self.is_timer_finished() == True:
-                self.notify("Timer is stopped and time is reseted !!!","", timeout=0, type="danger")
-        #Temp protection end
+        #Temp protection end modification
 
         # Check if timer finished and go to next step
         if self.is_timer_finished() == True and self.s == False:
