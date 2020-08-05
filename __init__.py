@@ -91,4 +91,4 @@ class Mod_MashStep(StepBase):
         if self.is_timer_finished() == True and self.s == False:
             self.s = True
             self.notify("Mash Step Completed!", "Starting the next step", timeout=None)
-            self.next()
+            next(self)
